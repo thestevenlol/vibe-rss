@@ -22,9 +22,14 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'RSS Fetch API is running' });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📡 API endpoint: http://localhost:${PORT}/api/rss?url=<RSS_URL>`);
-  console.log(`🌐 Frontend: http://localhost:${PORT}`);
-});
+// Start server only when run directly (not when imported for testing)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`📡 API endpoint: http://localhost:${PORT}/api/rss?url=<RSS_URL>`);
+    console.log(`🌐 Frontend: http://localhost:${PORT}`);
+  });
+}
+
+// Export app for testing
+module.exports = app;

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Incomplete RSS Feed</title>
+    <link>https://example.com/incomplete</link>
+    <item>
+      <title>Item Without Description</title>
+      <link>https://example.com/item1</link>
+    </item>
+    <item>
+      <title>Item Without Date or Link</title>
+      <description>This item has no pubDate or link element.</description>
+    </item>
+  </channel>
+</rss>

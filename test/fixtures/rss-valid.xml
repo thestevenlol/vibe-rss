@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>BBC News - World</title>
+    <link>https://www.bbc.co.uk/news/world</link>
+    <description>The latest stories from the World section of BBC News.</description>
+    <language>en-gb</language>
+    <lastBuildDate>Fri, 07 Feb 2026 10:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Breaking: Major Event Happens</title>
+      <description>This is a sample news story with important details about what happened.</description>
+      <link>https://www.bbc.co.uk/news/world-12345678</link>
+      <guid isPermaLink="false">https://www.bbc.co.uk/news/world-12345678</guid>
+      <pubDate>Fri, 07 Feb 2026 09:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Technology Breakthrough Announced</title>
+      <description>Scientists have discovered something amazing in their latest research.</description>
+      <link>https://www.bbc.co.uk/news/technology-12345679</link>
+      <guid isPermaLink="false">https://www.bbc.co.uk/news/technology-12345679</guid>
+      <pubDate>Fri, 07 Feb 2026 08:15:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Weather Update: Storms Expected</title>
+      <description>Severe weather warnings issued for multiple regions this weekend.</description>
+      <link>https://www.bbc.co.uk/news/weather-12345680</link>
+      <guid isPermaLink="false">https://www.bbc.co.uk/news/weather-12345680</guid>
+      <pubDate>Fri, 07 Feb 2026 07:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

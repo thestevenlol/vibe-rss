@@ -73,3 +73,108 @@ Run with auto-reload (Node.js 18+):
 ```bash
 npm run dev
 ```
+
+## Testing
+
+This project includes a comprehensive testing suite with 80%+ code coverage.
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode (for development)
+npm run test:watch
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run tests in CI mode
+npm run test:ci
+```
+
+### Test Structure
+
+The test suite is organized as follows:
+
+```
+test/
+├── backend/
+│   ├── server.test.js           # Server initialization and middleware tests
+│   ├── routes/
+│   │   └── rss.test.js          # RSS route handler tests
+│   └── integration/
+│       └── api.test.js          # End-to-end API tests
+├── frontend/
+│   ├── app.test.js              # Frontend app logic and DOM tests
+│   └── utils.test.js            # Utility function tests
+└── fixtures/
+    ├── rss-valid.xml            # Sample RSS 2.0 feed
+    ├── atom-valid.xml           # Sample Atom feed
+    ├── rss-empty.xml            # Empty feed
+    ├── rss-missing-elements.xml # Feed with missing optional elements
+    ├── rss-malformed.xml        # Malformed XML
+    └── helper.js                # Fixture loading utilities
+```
+
+### Testing Framework
+
+- **Jest** - Test framework with built-in mocking and assertions
+- **Supertest** - HTTP assertions for API testing
+- **jsdom** - DOM implementation for frontend testing
+
+### Test Coverage
+
+Coverage thresholds are enforced at 80% minimum for:
+- Branches
+- Functions
+- Lines
+- Statements
+
+View the coverage report after running `npm run test:coverage`:
+```bash
+open coverage/index.html
+```
+
+### Writing Tests
+
+When adding new features, ensure tests are included:
+
+**Backend tests** should cover:
+- Route handlers and middleware
+- URL validation and error handling
+- Axios mocking for external API calls
+- Response format validation
+
+**Frontend tests** should cover:
+- DOM manipulation and event handlers
+- XML parsing (RSS 2.0 and Atom)
+- Error state management
+- Utility functions (HTML escaping, date formatting)
+
+Example test:
+```javascript
+test('should return 400 when url parameter is missing', async () => {
+  const response = await request(app)
+    .get('/api/rss')
+    .expect(400);
+
+  expect(response.body).toEqual({
+    error: 'Bad Request',
+    message: 'Missing required query parameter: url'
+  });
+});
+```
+
+### Continuous Integration
+
+Tests are designed to run in CI environments:
+```bash
+npm run test:ci
+```
+
+This command:
+- Runs tests in CI mode (no watch)
+- Generates coverage reports
+- Uses limited workers for better performance

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSS Feed Fetcher</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📡 RSS Feed Fetcher</h1>
+            <p class="subtitle">Fetch and display any RSS feed instantly</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <div class="input-group">
+                    <input 
+                        type="url" 
+                        id="rssUrl" 
+                        placeholder="Enter RSS feed URL (e.g., https://feeds.bbc.co.uk/news/rss.xml)"
+                        autocomplete="off"
+                    >
+                    <button id="fetchBtn" class="btn-primary">Fetch Feed</button>
+                </div>
+                <div class="quick-links">
+                    <span>Try: </span>
+                    <button class="link-btn" data-url="https://feeds.bbci.co.uk/news/rss.xml">BBC News</button>
+                    <button class="link-btn" data-url="https://hnrss.org/frontpage">Hacker News</button>
+                    <button class="link-btn" data-url="https://www.reddit.com/r/technology/.rss">Reddit Tech</button>
+                </div>
+            </div>
+
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Fetching feed...</p>
+            </div>
+
+            <div id="error" class="error hidden"></div>
+
+            <div id="results" class="results hidden">
+                <div class="results-header">
+                    <h2 id="feedTitle">Feed Items</h2>
+                    <button id="clearBtn" class="btn-secondary">Clear</button>
+                </div>
+                <div id="feedStats" class="feed-stats"></div>
+                <div id="feedItems" class="feed-items"></div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Built with Express.js • <a href="/api/health" target="_blank">API Status</a></p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 // DOM Elements
 const rssUrlInput = document.getElementById('rssUrl');
 const fetchBtn = document.getElementById('fetchBtn');
+const saveBtn = document.getElementById('saveBtn');
 const clearBtn = document.getElementById('clearBtn');
 const loadingEl = document.getElementById('loading');
 const errorEl = document.getElementById('error');
@@ -8,10 +9,13 @@ const resultsEl = document.getElementById('results');
 const feedTitleEl = document.getElementById('feedTitle');
 const feedStatsEl = document.getElementById('feedStats');
 const feedItemsEl = document.getElementById('feedItems');
-const linkBtns = document.querySelectorAll('.link-btn');
+const savedFeedsSection = document.getElementById('savedFeedsSection');
+const savedFeedsList = document.getElementById('savedFeedsList');
+const SAVED_FEEDS_KEY = 'savedRssFeeds';
 
 // Event Listeners
 fetchBtn.addEventListener('click', fetchRssFeed);
+saveBtn.addEventListener('click', saveCurrentFeed);
 clearBtn.addEventListener('click', clearResults);
 
 rssUrlInput.addEventListener('keypress', (e) => {
@@ -20,12 +24,7 @@ rssUrlInput.addEventListener('keypress', (e) => {
     }
 });
 
-linkBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        rssUrlInput.value = btn.dataset.url;
-        fetchRssFeed();
-    });
-});
+renderSavedFeeds();
 
 // Main Functions
 async function fetchRssFeed() {
@@ -189,6 +188,112 @@ function clearResults() {
     rssUrlInput.value = '';
     hideResults();
     hideError();
+}
+
+function saveCurrentFeed() {
+    const url = rssUrlInput.value.trim();
+
+    if (!url || !isValidFeedUrl(url)) {
+        showError('Please enter a valid RSS feed URL');
+        return;
+    }
+
+    const savedFeeds = readSavedFeeds();
+    if (savedFeeds.includes(url)) {
+        showError('This feed is already saved.');
+        return;
+    }
+
+    writeSavedFeeds([url, ...savedFeeds]);
+    hideError();
+    renderSavedFeeds();
+}
+
+function removeSavedFeed(urlToRemove) {
+    const updatedFeeds = readSavedFeeds().filter((url) => url !== urlToRemove);
+    writeSavedFeeds(updatedFeeds);
+    renderSavedFeeds();
+}
+
+function renderSavedFeeds() {
+    if (!savedFeedsSection || !savedFeedsList) {
+        return;
+    }
+
+    const savedFeeds = readSavedFeeds();
+
+    if (!savedFeeds.length) {
+        savedFeedsSection.classList.add('hidden');
+        savedFeedsList.innerHTML = '';
+        return;
+    }
+
+    savedFeedsSection.classList.remove('hidden');
+    savedFeedsList.innerHTML = savedFeeds.map((url) => {
+        const encodedUrl = encodeURIComponent(url);
+        return `
+            <div class="saved-feed">
+                <button type="button" class="saved-feed-link" data-url="${encodedUrl}">${escapeHtml(url)}</button>
+                <button type="button" class="saved-feed-remove" data-url="${encodedUrl}">Remove</button>
+            </div>
+        `;
+    }).join('');
+
+    savedFeedsList.querySelectorAll('.saved-feed-link').forEach((button) => {
+        button.addEventListener('click', () => {
+            const url = decodeURIComponent(button.dataset.url || '');
+            if (!url) {
+                return;
+            }
+            rssUrlInput.value = url;
+            fetchRssFeed();
+        });
+    });
+
+    savedFeedsList.querySelectorAll('.saved-feed-remove').forEach((button) => {
+        button.addEventListener('click', () => {
+            const url = decodeURIComponent(button.dataset.url || '');
+            if (!url) {
+                return;
+            }
+            removeSavedFeed(url);
+        });
+    });
+}
+
+function readSavedFeeds() {
+    try {
+        const raw = localStorage.getItem(SAVED_FEEDS_KEY);
+        if (!raw) {
+            return [];
+        }
+
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) {
+            return [];
+        }
+
+        return parsed.filter((url) => typeof url === 'string' && url.trim());
+    } catch {
+        return [];
+    }
+}
+
+function writeSavedFeeds(feeds) {
+    try {
+        localStorage.setItem(SAVED_FEEDS_KEY, JSON.stringify(feeds));
+    } catch {
+        // Ignore storage failures so the rest of the UI still works.
+    }
+}
+
+function isValidFeedUrl(url) {
+    try {
+        const parsed = new URL(url);
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch {
+        return false;
+    }
 }
 
 function escapeHtml(text) {

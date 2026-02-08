@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RSS Feed Fetcher</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -16,19 +18,15 @@
         <main>
             <div class="input-section">
                 <div class="input-group">
-                    <input 
-                        type="url" 
-                        id="rssUrl" 
+                    <input type="url" id="rssUrl"
                         placeholder="Enter RSS feed URL (e.g., https://feeds.bbc.co.uk/news/rss.xml)"
-                        autocomplete="off"
-                    >
+                        autocomplete="off">
                     <button id="fetchBtn" class="btn-primary">Fetch Feed</button>
+                    <button id="saveBtn" class="btn-secondary" type="button">Save Feed</button>
                 </div>
-                <div class="quick-links">
-                    <span>Try: </span>
-                    <button class="link-btn" data-url="https://feeds.bbci.co.uk/news/rss.xml">BBC News</button>
-                    <button class="link-btn" data-url="https://hnrss.org/frontpage">Hacker News</button>
-                    <button class="link-btn" data-url="https://www.reddit.com/r/technology/.rss">Reddit Tech</button>
+                <div id="savedFeedsSection" class="saved-feeds hidden">
+                    <h3>Saved Feeds</h3>
+                    <div id="savedFeedsList" class="saved-feeds-list"></div>
                 </div>
             </div>
 
@@ -50,10 +48,11 @@
         </main>
 
         <footer>
-            <p>Built with Express.js • <a href="/api/health" target="_blank">API Status</a></p>
+            <p>Built with Express.js • <a href="/health" target="_blank">API Status</a></p>
         </footer>
     </div>
 
     <script src="app.js"></script>
 </body>
+
 </html>

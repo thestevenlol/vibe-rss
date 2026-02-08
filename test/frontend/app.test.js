@@ -15,11 +15,13 @@ function setupEnvironment() {
   // Completely reset the DOM document
   document.documentElement.innerHTML = '';
   document.documentElement.innerHTML = '<head></head><body></body>';
+  localStorage.clear();
   
   // Set up minimal DOM structure
   document.body.innerHTML = `
     <input id="rssUrl" value="" />
     <button id="fetchBtn"></button>
+    <button id="saveBtn"></button>
     <button id="clearBtn"></button>
     <div id="loading" class="hidden"></div>
     <div id="error" class="hidden"></div>
@@ -28,7 +30,9 @@ function setupEnvironment() {
       <div id="feedStats"></div>
       <div id="feedItems"></div>
     </div>
-    <button class="link-btn" data-url="https://example.com/feed.xml"></button>
+    <div id="savedFeedsSection" class="hidden">
+      <div id="savedFeedsList"></div>
+    </div>
   `;
 
   // Execute app.js in global context using indirect eval to make it global
@@ -513,6 +517,7 @@ describe('Frontend App - Event Handlers', () => {
   beforeEach(() => {
     setupEnvironment();
     global.fetch = jest.fn();
+    localStorage.clear();
   });
 
   test('clearResults should reset input and hide UI elements', () => {
@@ -531,12 +536,25 @@ describe('Frontend App - Event Handlers', () => {
     expect(errorEl.classList.contains('hidden')).toBe(true);
   });
 
-  test('link button should populate input and trigger fetch', () => {
-    const linkBtn = document.querySelector('.link-btn');
+  test('save button should store URL in localStorage', () => {
+    const saveBtn = document.getElementById('saveBtn');
     const input = document.getElementById('rssUrl');
+    const savedFeedsSection = document.getElementById('savedFeedsSection');
 
-    linkBtn.click();
+    input.value = 'https://example.com/feed.xml';
+    saveBtn.click();
 
-    expect(input.value).toBe('https://example.com/feed.xml');
+    expect(localStorage.getItem('savedRssFeeds')).toBe('["https://example.com/feed.xml"]');
+    expect(savedFeedsSection.classList.contains('hidden')).toBe(false);
+  });
+
+  test('remove button should remove URL from localStorage', () => {
+    localStorage.setItem('savedRssFeeds', JSON.stringify(['https://example.com/feed.xml']));
+    renderSavedFeeds();
+
+    const removeBtn = document.querySelector('.saved-feed-remove');
+    removeBtn.click();
+
+    expect(localStorage.getItem('savedRssFeeds')).toBe('[]');
   });
 });

@@ -14,11 +14,13 @@ function setupEnvironment() {
   // Completely reset the DOM document
   document.documentElement.innerHTML = '';
   document.documentElement.innerHTML = '<head></head><body></body>';
+  localStorage.clear();
   
   // Set up minimal DOM for functions that need it
   document.body.innerHTML = `
     <input id="rssUrl" value="" />
     <button id="fetchBtn"></button>
+    <button id="saveBtn"></button>
     <button id="clearBtn"></button>
     <div id="loading" class="hidden"></div>
     <div id="error" class="hidden"></div>
@@ -27,7 +29,9 @@ function setupEnvironment() {
       <div id="feedStats"></div>
       <div id="feedItems"></div>
     </div>
-    <button class="link-btn" data-url="https://example.com/feed.xml"></button>
+    <div id="savedFeedsSection" class="hidden">
+      <div id="savedFeedsList"></div>
+    </div>
   `;
   
   // Execute app.js in global context using indirect eval to make it global

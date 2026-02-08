@@ -54,17 +54,18 @@ header {
     text-align: center;
     margin-bottom: 3rem;
     padding: 2rem 0;
+    position: relative;
 }
 
 .header-content {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     gap: 2rem;
 }
 
 .header-content > div {
-    flex: 1;
+    flex: 0;
 }
 
 h1 {
@@ -159,6 +160,10 @@ button {
     padding: 0;
     box-shadow: var(--shadow);
     flex-shrink: 0;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .dark-mode-toggle:hover {

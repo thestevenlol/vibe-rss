@@ -23,6 +23,7 @@ function setupEnvironment() {
     <button id="fetchBtn"></button>
     <button id="saveBtn"></button>
     <button id="clearBtn"></button>
+    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode"></button>
     <div id="loading" class="hidden"></div>
     <div id="error" class="hidden"></div>
     <div id="results" class="hidden">
@@ -556,5 +557,162 @@ describe('Frontend App - Event Handlers', () => {
     removeBtn.click();
 
     expect(localStorage.getItem('savedRssFeeds')).toBe('[]');
+  });
+});
+
+describe('Frontend App - Dark Mode / Light Mode', () => {
+  beforeEach(() => {
+    setupEnvironment();
+    localStorage.clear();
+  });
+
+  describe('initDarkMode', () => {
+    test('should apply dark-mode class when localStorage has darkMode=true', () => {
+      localStorage.setItem('darkMode', 'true');
+      
+      initDarkMode();
+      
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+    });
+
+    test('should not apply dark-mode class when localStorage has darkMode=false', () => {
+      localStorage.setItem('darkMode', 'false');
+      
+      initDarkMode();
+      
+      expect(document.body.classList.contains('dark-mode')).toBe(false);
+    });
+
+    test('should not apply dark-mode class when localStorage is empty', () => {
+      localStorage.clear();
+      
+      initDarkMode();
+      
+      expect(document.body.classList.contains('dark-mode')).toBe(false);
+    });
+
+    test('should not apply dark-mode class when darkMode key does not exist', () => {
+      localStorage.setItem('otherKey', 'someValue');
+      
+      initDarkMode();
+      
+      expect(document.body.classList.contains('dark-mode')).toBe(false);
+    });
+
+    test('should handle invalid localStorage values gracefully', () => {
+      localStorage.setItem('darkMode', 'invalid');
+      
+      initDarkMode();
+      
+      expect(document.body.classList.contains('dark-mode')).toBe(false);
+    });
+  });
+
+  describe('toggleDarkMode', () => {
+    test('should add dark-mode class when starting from light mode', () => {
+      document.body.classList.remove('dark-mode');
+      
+      toggleDarkMode();
+      
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+    });
+
+    test('should remove dark-mode class when starting from dark mode', () => {
+      document.body.classList.add('dark-mode');
+      
+      toggleDarkMode();
+      
+      expect(document.body.classList.contains('dark-mode')).toBe(false);
+    });
+
+    test('should save dark mode state to localStorage when enabled', () => {
+      document.body.classList.remove('dark-mode');
+      
+      toggleDarkMode();
+      
+      expect(localStorage.getItem('darkMode')).toBe('true');
+    });
+
+    test('should save light mode state to localStorage when disabled', () => {
+      document.body.classList.add('dark-mode');
+      
+      toggleDarkMode();
+      
+      expect(localStorage.getItem('darkMode')).toBe('false');
+    });
+
+    test('should persist state across multiple toggles', () => {
+      // Start in light mode
+      document.body.classList.remove('dark-mode');
+      
+      // Toggle to dark
+      toggleDarkMode();
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+      expect(localStorage.getItem('darkMode')).toBe('true');
+      
+      // Toggle to light
+      toggleDarkMode();
+      expect(document.body.classList.contains('dark-mode')).toBe(false);
+      expect(localStorage.getItem('darkMode')).toBe('false');
+      
+      // Toggle to dark again
+      toggleDarkMode();
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+      expect(localStorage.getItem('darkMode')).toBe('true');
+    });
+  });
+
+  describe('Dark Mode Integration', () => {
+    test('should restore dark mode on page reload', () => {
+      // Simulate user enabling dark mode
+      toggleDarkMode();
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+      
+      // Simulate page reload by removing class and calling init
+      document.body.classList.remove('dark-mode');
+      initDarkMode();
+      
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+    });
+
+    test('should restore light mode on page reload', () => {
+      // Start with dark mode
+      document.body.classList.add('dark-mode');
+      toggleDarkMode(); // Toggles to light, saves to localStorage
+      expect(document.body.classList.contains('dark-mode')).toBe(false);
+      
+      // Simulate page reload by resetting DOM (it would be clean on reload)
+      // and then calling init
+      initDarkMode();
+      
+      expect(document.body.classList.contains('dark-mode')).toBe(false);
+    });
+
+    test('dark mode toggle button click should switch modes', () => {
+      const toggleBtn = document.getElementById('darkModeToggle');
+      document.body.classList.remove('dark-mode');
+      
+      toggleBtn.click();
+      
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+      expect(localStorage.getItem('darkMode')).toBe('true');
+    });
+
+    test('should maintain dark mode preference for new sessions', () => {
+      // User enables dark mode
+      localStorage.setItem('darkMode', 'true');
+      
+      // New session starts (fresh page load)
+      document.body.classList.remove('dark-mode');
+      initDarkMode();
+      
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+      
+      // Verify it persists after another toggle cycle
+      toggleDarkMode(); // Off
+      toggleDarkMode(); // On
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+      expect(localStorage.getItem('darkMode')).toBe('true');
+    });
   });
 });

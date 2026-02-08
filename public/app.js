@@ -3,6 +3,7 @@ const rssUrlInput = document.getElementById('rssUrl');
 const fetchBtn = document.getElementById('fetchBtn');
 const saveBtn = document.getElementById('saveBtn');
 const clearBtn = document.getElementById('clearBtn');
+const darkModeToggle = document.getElementById('darkModeToggle');
 const loadingEl = document.getElementById('loading');
 const errorEl = document.getElementById('error');
 const resultsEl = document.getElementById('results');
@@ -12,11 +13,13 @@ const feedItemsEl = document.getElementById('feedItems');
 const savedFeedsSection = document.getElementById('savedFeedsSection');
 const savedFeedsList = document.getElementById('savedFeedsList');
 const SAVED_FEEDS_KEY = 'savedRssFeeds';
+const DARK_MODE_KEY = 'darkMode';
 
 // Event Listeners
 fetchBtn.addEventListener('click', fetchRssFeed);
 saveBtn.addEventListener('click', saveCurrentFeed);
 clearBtn.addEventListener('click', clearResults);
+darkModeToggle.addEventListener('click', toggleDarkMode);
 
 rssUrlInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
@@ -24,6 +27,7 @@ rssUrlInput.addEventListener('keypress', (e) => {
     }
 });
 
+initDarkMode();
 renderSavedFeeds();
 
 // Main Functions
@@ -325,4 +329,16 @@ function formatDate(dateString) {
     } catch {
         return dateString;
     }
+}
+
+function initDarkMode() {
+    const isDarkMode = localStorage.getItem(DARK_MODE_KEY) === 'true';
+    if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+    }
+}
+
+function toggleDarkMode() {
+    const isDarkMode = document.body.classList.toggle('dark-mode');
+    localStorage.setItem(DARK_MODE_KEY, isDarkMode);
 }

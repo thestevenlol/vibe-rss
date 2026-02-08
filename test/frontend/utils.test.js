@@ -22,6 +22,7 @@ function setupEnvironment() {
     <button id="fetchBtn"></button>
     <button id="saveBtn"></button>
     <button id="clearBtn"></button>
+    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode"></button>
     <div id="loading" class="hidden"></div>
     <div id="error" class="hidden"></div>
     <div id="results" class="hidden">
